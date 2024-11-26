@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Báo giá Cửa lưới</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 20mm;
+        }
+
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            box-sizing: border-box;
+        }
+
+        .content {
+            width: 100%;
+            max-width: 800px;
+            margin: auto;
+            padding: 20px;
+            background: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        p {
+            margin: 5px 0;
+            font-size: 16px;
+        }
+
+        p i {
+            font-size: 16px;
+        }
+
+        img {
+            display: block;
+            max-width: 100%;
+            height: auto;
+            margin: 0 auto 20px;
+        }
+
+        @media print {
+            body {
+                margin: 0;
+                padding: 0;
+                box-shadow: none;
+            }
+
+            .content {
+                box-shadow: none;
+                page-break-inside: avoid;
+            }
+
+            img {
+                page-break-before: always;
+            }
+        }
+
+        .bordered-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .bordered-table th,
+        .bordered-table td {
+            border: none;
+        }
+
+        .bordered-table th {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+        }
+
+        .bordered-table td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+        }
+    </style>
+    <script>
+        function getCustomQueryParam(param) {
+            const queryString = window.location.href.split('?').slice(1);
+            for (let part of queryString) {
+                const [key, value] = part.split('=');
+                if (key === param) {
+                    return decodeURIComponent(value || '');
+                }
+            }
+            return null;
+        }
+
+        function getValuesBetweenMarkers(input, startMarker, endMarker) {
+            const regex = new RegExp(`${startMarker}(.*?)${endMarker}`, 'g');
+            let matches = [];
+            let match;
+            while ((match = regex.exec(input)) !== null) {
+                const tempString = match[1];
+                const innerMatches = tempString.split('@');
+                matches.push(...innerMatches);
+            }
+            return matches;
+        }
+
+        function formatNumber(numberString) {
+            if (!numberString) return '';
+            const num = numberString.replace(',', '.');
+            const formatted = parseFloat(num).toString();
+            return formatted.replace('.', ',');
+        }
+
+        function formatWithCommas(numberString) {
+            if (!numberString) return '';
+            const num = numberString.replace(',', '.');
+            return parseFloat(num).toLocaleString('it-IT');
+        }
+
+        window.onload = function () {
+            // Lấy các giá trị từ URL
+            const maDonhang = getCustomQueryParam('ma_don_hang') || '';
+            const donviPhutrach = getCustomQueryParam('don_vi_phu_trach') || '';
+            const tenNguoilienhe = getCustomQueryParam('ten_nguoi_lien_he') || '';
+            const tenKhachhangcuoi = getCustomQueryParam('ten_khach_hang_cuoi') || '';
+            const tenTochuc = getCustomQueryParam('ten_to_chuc') || '';
+            const diachiChitiet = getCustomQueryParam('dia_chi_chi_tiet') || '';
+            const diachiKhachhangcuoi = getCustomQueryParam('dia_chi_khach_hang_cuoi') || '';
+            const tenNhanvien = getCustomQueryParam('ten_nhan_vien') || '';
+            const sdtNhanvien = getCustomQueryParam('sdt_nhan_vien') || '';
+            const sdtKhachhang = getCustomQueryParam('sdt_khach_hang') || '';
+            const sdtKhachhangcuoi = getCustomQueryParam('sdt_khach_hang_cuoi') || '';
+            const emailKhachhang = getCustomQueryParam('email_khach_hang') || '';
+            const hanGiaohang = getCustomQueryParam('han_giao_hang') || '';
+            const tongSobo = getCustomQueryParam('tong_so_bo') || '';
+            const congnpp = getCustomQueryParam('cong_npp') || '';
+            const mucChietkhaunpp = getCustomQueryParam('muc_chiet_khau_npp') || '';
+            const giatriChietkhaunpp = getCustomQueryParam('gia_tri_chiet_khau_npp') || '';
+            const phiVanchuyenlapdatnpp = getCustomQueryParam('phi_van_chuyen_lap_dat_npp') || '';
+            const mucthueGTGTnpp = getCustomQueryParam('muc_thue_gtgt_npp') || '';
+            const thueGTGTnpp = getCustomQueryParam('thue_gtgt_npp') || '';
+            const tamUngnpp = getCustomQueryParam('tam_ung_npp') || '';
+            const sotienConthieunpp = getCustomQueryParam('so_tien_con_thieu_npp') || '';
+            const qrCode = getCustomQueryParam('QRCODE') || '';
+
+            // Cập nhật DOM chỉ khi giá trị không rỗng
+            if (maDonhang) document.getElementById('maDonhang').innerText = maDonhang;
+            if (donviPhutrach) document.getElementById('donviPhutrach').innerText = donviPhutrach;
+            if (tenNguoilienhe) document.getElementById('tenNguoilienhe').innerText = tenNguoilienhe;
+            if (tenKhachhangcuoi) document.getElementById('tenKhachhangcuoi').innerText = tenKhachhangcuoi;
+            if (tenTochuc) document.getElementById('tenTochuc').innerText = tenTochuc;
+            if (diachiChitiet) document.getElementById('diachiChitiet').innerText = diachiChitiet;
+            if (diachiKhachhangcuoi) document.getElementById('diachiKhachhangcuoi').innerText = diachiKhachhangcuoi;
+            if (tenNhanvien) document.getElementById('tenNhanvien').innerText = tenNhanvien;
+            if (sdtNhanvien) document.getElementById('sdtNhanvien').innerText = sdtNhanvien;
+            if (sdtKhachhang) document.getElementById('sdtKhachhang').innerText = sdtKhachhang;
+            if (sdtKhachhangcuoi) document.getElementById('sdtKhachhangcuoi').innerText = sdtKhachhangcuoi;
+            if (emailKhachhang) document.getElementById('emailKhachhang').innerText = emailKhachhang;
+            if (hanGiaohang) document.getElementById('hanGiaohang').innerText = hanGiaohang;
+            if (tongSobo) document.getElementById('tongSobo').innerText = tongSobo;
+            if (congnpp) document.getElementById('congnpp').innerText = formatWithCommas(congnpp);
+            if (mucChietkhaunpp) document.getElementById('mucChietkhaunpp').innerText = mucChietkhaunpp;
+            if (giatriChietkhaunpp) document.getElementById('giatriChietkhaunpp').innerText = formatWithCommas(giatriChietkhaunpp);
+            if (phiVanchuyenlapdatnpp) document.getElementById('phiVanchuyenlapdatnpp').innerText = formatWithCommas(phiVanchuyenlapdatnpp);
+            if (mucthueGTGTnpp) document.getElementById('mucthueGTGTnpp').innerText = mucthueGTGTnpp;
+            if (thueGTGTnpp) document.getElementById('thueGTGTnpp').innerText = formatWithCommas(thueGTGTnpp);
+            if (tamUngnpp) document.getElementById('tamUngnpp').innerText = formatWithCommas(tamUngnpp);
+            if (sotienConthieunpp) document.getElementById('sotienConthieunpp').innerText = formatWithCommas(sotienConthieunpp);
+
+            const tableBody = document.getElementById('itemTableBody');
+            const inputString = window.location.href;
+
+            const sttTrongdon = getValuesBetweenMarkers(inputString, '~stt_trong_don~', '~stt_trong_don~');
+            const vitriLapdat = getValuesBetweenMarkers(inputString, '~vi_tri_lap_dat~', '~vi_tri_lap_dat~');
+            const diengiai = getValuesBetweenMarkers(inputString, '~dien_giai~', '~dien_giai~');
+            const maSanphamid = getValuesBetweenMarkers(inputString, '~ma_san_pham_id~', '~ma_san_pham_id~');
+            const ghiChu = getValuesBetweenMarkers(inputString, '~ghi_chu~', '~ghi_chu~');
+            const chieuRong = getValuesBetweenMarkers(inputString, '~chieu_rong~', '~chieu_rong~');
+            const chieuCao = getValuesBetweenMarkers(inputString, '~chieu_cao~', '~chieu_cao~');
+            const dienTich = getValuesBetweenMarkers(inputString, '~dien_tich~', '~dien_tich~');
+            const soLuong = getValuesBetweenMarkers(inputString, '~so_luong~', '~so_luong~');
+            const dvt = getValuesBetweenMarkers(inputString, '~dvt~', '~dvt~');
+            const khoiLuong = getValuesBetweenMarkers(inputString, '~khoi_luong~', '~khoi_luong~');
+            const dongianpp = getValuesBetweenMarkers(inputString, '~don_gia_npp~', '~don_gia_npp~');
+            const giabannpp = getValuesBetweenMarkers(inputString, '~gia_ban_npp~', '~gia_ban_npp~');
+
+            const itemCount = Math.max(
+                sttTrongdon.length,
+                vitriLapdat.length,
+                diengiai.length,
+                maSanphamid.length,
+                ghiChu.length,
+                chieuRong.length,
+                chieuCao.length,
+                dienTich.length,
+                soLuong.length,
+                dvt.length,
+                khoiLuong.length,
+                dongianpp.length,
+                giabannpp.length
+            );
+
+            let items = [];
+            for (let i = 0; i < itemCount; i++) {
+                items.push({
+                    stt: sttTrongdon[i] || '',
+                    vitriLapdat: decodeURIComponent(vitriLapdat[i] || ''),
+                    diengiai: decodeURIComponent(diengiai[i] || ''),
+                    maSanphamid: decodeURIComponent(maSanphamid[i] || ''),
+                    ghiChu: decodeURIComponent(ghiChu[i] || ''),
+                    chieuRong: formatNumber(chieuRong[i] || ''),
+                    chieuCao: formatNumber(chieuCao[i] || ''),
+                    dienTich: formatNumber(dienTich[i] || ''),
+                    soLuong: formatNumber(soLuong[i] || ''),
+                    dvt: decodeURIComponent(dvt[i] || ''),
+                    khoiLuong: formatNumber(khoiLuong[i] || ''),
+                    dongianpp: formatWithCommas(dongianpp[i] || ''),
+                    giabannpp: formatWithCommas(giabannpp[i] || '')
+                });
+            }
+
+            items.sort((a, b) => a.stt - b.stt);
+
+            for (let item of items) {
+                tableBody.innerHTML += `
+                <tr>
+                    <td style="text-align: center"><span>${item.stt || ''}</span></td>
+                    <td><span>${item.vitriLapdat || ''}</span></td>
+                    <td><span>${item.maSanphamid || ''}</span></td>
+                    <td><span>${item.diengiai || ''}</span></td>
+                    <td style="text-align: right"><span>${item.chieuRong || ''}</span></td>
+                    <td style="text-align: center"><span>${item.chieuCao || ''}</span></td>
+                    <td style="text-align: right"><span>${item.dienTich || ''}</span></td>
+                    <td style="text-align: center"><span>${item.soLuong || ''}</span></td>
+                    <td style="text-align: center"><span>${item.dvt || ''}</span></td>
+                    <td style="text-align: center"><span>${item.khoiLuong || ''}</span></td>
+                    <td style="text-align: right"><span>${item.dongianpp || ''}</span></td>
+                    <td style="text-align: right"><span>${item.giabannpp || ''}</span></td>
+                </tr>
+            `;
+            }
+        };
+    </script>
+
+</head>
+
+<body>
+    <div class="content">
+        <img src="https://i.imgur.com/vfwvNd4.jpg" alt="Mô tả hình ảnh">
+        <h2 style="text-align: center">BÁO GIÁ CỬA LƯỚI CHỐNG MUỖI</h2>
+        <table class="bordered-table">
+            <tbody>
+                <tr style="line-height: 24px;">
+                    <td colspan="2"><b>Thông tin báo giá</b></td>
+                    <td><i>Số:</i></td>
+                    <td><i><span id="maDonhang"></span></i></td>
+                </tr>
+                <tr style="line-height: 24px;">
+                    <td><i>Kính gửi:</i></td>
+                    <td><span id="tenNguoilienhe"></span></td>
+                    <td><i>Ngày phát hành:</i></td>
+                    <td></td>
+                </tr>
+                <tr style="line-height: 24px;">
+                    <td><i>Đơn vị:</i></td>
+                    <td><span id="donviPhutrach"></span></td>
+                    <td><i>Dự kiến giao:</i></td>
+                    <td><span id="hanGiaohang"></span></td>
+                </tr>
+                <tr style="line-height: 24px;">
+                    <td><i>Địa chỉ:</i></td>
+                    <td><span id="diachiChitiet"></span></td>
+                    <td><i>Soạn báo giá:</i></td>
+                    <td><span id="tenNhanvien"></span></td>
+                </tr>
+                <tr style="line-height: 24px;">
+                    <td><i>SĐT:</i></td>
+                    <td><span id="sdtKhachhang"></span></td>
+                    <td><i>SĐT:</i></td>
+                    <td><span id="sdtNhanvien"></span></td>
+                </tr>
+                <tr style="line-height: 24px;">
+                    <td><i>Email:</i></td>
+                    <td><span id="emailKhachhang"></span></td>
+                    <td><i>CSKH:</i></td>
+                    <td><b>
+                            <font color="red">1900 0282</font>
+                    </td></b>
+                </tr>
+            </tbody>
+        </table>
+
+        <table class="bordered-table">
+            <thead style="background-color: #78b47ac7; color: black">
+                <tr>
+                    <th style="text-align: center">STT</th>
+                    <th style="text-align: center">Vị trí lắp đặt</th>
+                    <th style="text-align: center">Mã sản phẩm</th>
+                    <th style="text-align: center">Diễn giải</th>
+                    <th style="text-align: center">Rộng<br>(mm)</th>
+                    <th style="text-align: center">Cao<br>(mm)</th>
+                    <th style="text-align: center">Diện tích<br>(m2)</th>
+                    <th style="text-align: center">S.lg<br>(bộ)</th>
+                    <th style="text-align: center">ĐVT</th>
+                    <th style="text-align: center">K.lg</th>
+                    <th style="text-align: center">Đơn giá<br>(VNĐ/m2)</th>
+                    <th style="text-align: center">Thành tiền<br>(VNĐ)</th>
+                </tr>
+            </thead>
+            <tbody id="itemTableBody">
+                <!-- Rows will be added dynamically here -->
+            </tbody>
+            <thead>
+                <tr>
+                    <th colspan="7">Cộng</th>
+                    <th style="text-align: center"><span id="tongSobo"></span></th>
+                    <th style="text-align: center"><b>Bộ</b></th>
+                    <th></th>
+                    <th></th>
+                    <th style="text-align: right"><span id="congnpp"></span></th>
+                </tr>
+                <tr>
+                    <th colspan="7">Chiết khấu</th>
+                    <th style="text-align: center"><span id="mucChietkhaunpp">%</span></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th style="text-align: right"><span id="giatriChietkhaunpp"></span></th>
+                </tr>
+                <tr>
+                    <th colspan="7">Phí vận chuyển lắp đặt</th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th style="text-align: right"><span id="phiVanchuyenlapdatnpp"></span></th>
+                </tr>
+                <tr>
+                    <th colspan="7">Thuế GTGT</th>
+                    <th style="text-align: center"><span id="mucthueGTGTnpp">%</span></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th style="text-align: right"><span id="thueGTGTnpp"></span></th>
+                </tr>
+                <tr>
+                    <th colspan="7">Tạm ứng</th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th style="text-align: right"><span id="tamUngnpp"></span></th>
+                </tr>
+                <tr>
+                    <th colspan="7">Số tiền còn phải thanh toán</th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th style="text-align: right"><span id="sotienConthieunpp"></span></th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</body>
+
+</html>
