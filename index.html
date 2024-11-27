@@ -20,17 +20,25 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: flex-start;
+            justify-content: center;
             box-sizing: border-box;
+            background: url('https://i.imgur.com/BrJoeOv.png') no-repeat center center;
+            background-size: 210mm auto;
+            opacity: 0.99;
+            /* Điều chỉnh độ trong suốt của ảnh chìm */
         }
 
         .content {
-            width: 100%;
-            max-width: 800px;
+            width: 210mm;
+            max-width: 210mm;
             margin: auto;
             padding: 20px;
-            background: #fff;
+            background: rgba(255, 255, 255, 0.95);
+            /* Tạo nền trắng mờ cho nội dung */
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+            /* Đảm bảo rằng các phần tử con nằm trên nền */
+            z-index: 1;
         }
 
         h2 {
