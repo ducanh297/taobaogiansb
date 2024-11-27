@@ -29,7 +29,7 @@
         }
 
         .content {
-            width: 210mm;
+            width: 100%;
             max-width: 210mm;
             margin: auto;
             padding: 20px;
@@ -84,23 +84,39 @@
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
+            table-layout: fixed;
+            /* Đặt bảng có độ rộng cố định */
         }
 
         .bordered-table th,
         .bordered-table td {
-            border: none;
-        }
-
-        .bordered-table th {
             border: 1px solid black;
             padding: 8px;
             text-align: left;
+            word-wrap: break-word;
+            /* Đảm bảo nội dung không tràn khỏi ô */
         }
 
-        .bordered-table td {
-            border: 1px solid black;
-            padding: 8px;
-            text-align: left;
+        @media (max-width: 768px) {
+            body {
+                background-size: cover;
+                /* Điều chỉnh ảnh nền trên thiết bị nhỏ */
+            }
+
+            .content {
+                padding: 10px;
+                /* Giảm padding để nội dung vừa màn hình */
+            }
+
+            .bordered-table th,
+            .bordered-table td {
+                font-size: 14px;
+                /* Giảm kích thước chữ trên thiết bị di động */
+            }
+
+            .bordered-table {
+                font-size: 14px;
+            }
         }
     </style>
     <script>
